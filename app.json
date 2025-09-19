@@ -24,6 +24,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-5698403205232413~4194942326",
+          "iosAppId": "ca-app-pub-xxxxxxxx~xxxxxxxx"
+        }
+      ]
+    ]
   }
 }
