@@ -69,7 +69,7 @@ interstitial.addAdEventListener(AdEventType.CLOSED, () => {
   isCooldown = true;
   setTimeout(() => {
     isCooldown = false;
-  }, 30000);
+  }, 20000);
 
   // Call all queued callbacks once safely
   adCallbackQueue.forEach((cb) => cb());

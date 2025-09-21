@@ -28,6 +28,7 @@ export default function CategoriesScreen({ navigation }) {
   };
 
   return (
+    <>
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Text style={[styles.header, { color: theme.text }]}>Categories</Text>
       <FlatList
@@ -36,10 +37,12 @@ export default function CategoriesScreen({ navigation }) {
         renderItem={renderItem}
         contentContainerStyle={{ padding: 16 }}
       />
-      <View style={styles.adContainer}>
+      
+    </View>
+    <View style={styles.adContainer}>
         <BannerAdContainer adUnitId={bannerAdUnitId} />
       </View>
-    </View>
+    </>
   );
 }
 

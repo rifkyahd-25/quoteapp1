@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.rifkyahd2591.quoteapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,6 +34,11 @@
           "iosAppId": "ca-app-pub-xxxxxxxx~xxxxxxxx"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "10ec16c0-4aaa-4410-a3ad-4d3a65a2d251"
+      }
+    }
   }
 }

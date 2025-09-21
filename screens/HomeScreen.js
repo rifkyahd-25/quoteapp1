@@ -17,7 +17,7 @@ import QuoteCardSkeleton from "../components/QuoteCardSkeleton";
 import QuoteButtons from "../components/QuoteButtons";
 import BannerAdContainer from "../components/BannerAdContainer";
 import { TestIds } from "react-native-google-mobile-ads";
-
+import Toast from "react-native-toast-message";
 
 const { width } = Dimensions.get("window");
 
@@ -71,15 +71,31 @@ export default function HomeScreen() {
         width: 1080,
         height: 1080,
       });
+
       const perm = await MediaLibrary.requestPermissionsAsync();
       if (perm.status === "granted") {
         await MediaLibrary.saveToLibraryAsync(uri);
-        alert("✅ Quote saved to gallery!");
+
+        Toast.show({
+          type: "success",
+          text1: "✅ Quote saved!",
+          text2: "Your quote has been saved to the gallery.",
+        });
       } else {
-        alert("Permission to access gallery denied.");
+        Toast.show({
+          type: "error",
+          text1: "Permission denied",
+          text2: "Please allow gallery access to save quotes.",
+        });
       }
     } catch (error) {
       console.log("Error capturing quote:", error);
+
+      Toast.show({
+        type: "error",
+        text1: "Permission denied",
+        text2: "Please allow gallery access to save quotes.",
+      });
     }
   };
 
