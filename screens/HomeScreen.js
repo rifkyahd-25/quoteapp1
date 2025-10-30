@@ -28,7 +28,7 @@ export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
     const bannerAdUnitId = __DEV__
       ? TestIds.BANNER
-      : "ca-app-pub-xxxxxxxx~yyyyyyyyyy";
+      : "ca-app-pub-2598026458310292/9340444218";
 
   useEffect(() => {
     getQuoteOfTheDay();
@@ -44,7 +44,7 @@ export default function HomeScreen() {
   };
 
   const getQuoteOfTheDay = async () => {
-    const quotesData = (await import("../assets/quotes.json")).default;
+    const quotesData = (await import("../data/quotes.json")).default;
     const indexStr = await AsyncStorage.getItem("quoteIndex");
     let index = indexStr ? parseInt(indexStr, 10) : 0;
     if (index >= quotesData.length) index = 0;

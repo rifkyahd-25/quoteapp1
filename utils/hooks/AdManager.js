@@ -46,7 +46,7 @@
 // AdManager.js
 import { InterstitialAd, AdEventType, TestIds } from "react-native-google-mobile-ads";
 
-const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : "ca-app-pub-xxxx/yyyy";
+const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : "ca-app-pub-2598026458310292/1060190011";
 
 let interstitial = InterstitialAd.createForAdRequest(adUnitId, {
   requestNonPersonalizedAdsOnly: true,

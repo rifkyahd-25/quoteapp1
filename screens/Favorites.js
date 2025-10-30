@@ -15,7 +15,7 @@ export default function Favorites() {
   const downloadColor = "#000000";
     const bannerAdUnitId = __DEV__
       ? TestIds.BANNER
-      : "ca-app-pub-xxxxxxxx~yyyyyyyyyy";
+      : "ca-app-pub-2598026458310292/4999435025";
 
   if (favorites.length === 0)
     return <EmptyState message="No favorites yet!" theme={theme} />;

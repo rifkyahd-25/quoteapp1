@@ -115,7 +115,7 @@
 // });
 
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet, TouchableOpacity, Text } from "react-native";
 import QuoteCard from "../components/QuoteCard";
 import SkeletonLoading from "../components/SkeletonLoading";
 // import SearchBar from "../components/SearchBar";
@@ -126,8 +126,10 @@ import useFavorites from "../utils/hooks/useFavorites";
 import BannerAdContainer from "../components/BannerAdContainer";
 import { NativeAd, TestIds } from "react-native-google-mobile-ads";
 import NativeAdBlock from "../components/NativeAdBlock";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function CategoryQuotes({ route }) {
+export default function CategoryQuotes({ route, navigation }) {
   const { category } = route.params;
   const { theme } = useContext(ThemeContext);
   const [quotesData, setQuotesData] = useState([]);
@@ -143,15 +145,17 @@ export default function CategoryQuotes({ route }) {
 
   const bannerAdUnitId = __DEV__
     ? TestIds.BANNER
-    : "ca-app-pub-xxxxxxxx~yyyyyyyyyy";
+    : "ca-app-pub-2598026458310292/1703187846";
 
   const nativeAdUnitId = __DEV__
     ? TestIds.NATIVE
-    : "ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy";
+    : "ca-app-pub-2598026458310292/1024530990";
+
+
 
   useEffect(() => {
     const loadQuotes = async () => {
-      const data = await import("../assets/quotes.json");
+      const data = await import("../data/quotes.json");
       setQuotesData(data.default);
       setLoadingQuotes(false);
     };
@@ -231,8 +235,27 @@ export default function CategoryQuotes({ route }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <CategoryHeader category={category} theme={theme} />
-      {/* <SearchBar value={searchText} onChangeText={setSearchText} theme={theme} /> */}
+      <View
+  style={{
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  }}
+>
+  <TouchableOpacity
+    style={{ flexDirection: "row", alignItems: "center" }}
+    onPress={() => navigation.goBack()}
+  >
+    <Ionicons name="arrow-back" size={24} color={theme.text} />
+    <Text style={{ color: theme.text, fontSize: 16, marginLeft: 5 }}>
+      Back
+    </Text>
+  </TouchableOpacity>
+
+  <CategoryHeader category={category} theme={theme} />
+</View>
+
       <FlatList
         ref={flatListRef}
         data={filteredQuotes}

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 
 export default function CategoryHeader({ category, theme }) {
   return (
-    <View style={[styles.badge, { backgroundColor: theme.smcardtextcolor }]}>
+    <View style={[styles.badge, {  }]}>
       <Text style={[styles.text, { color: theme.text, fontFamily: "Lora" }]}>
         {category} Quotes
       </Text>

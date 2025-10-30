@@ -6,8 +6,21 @@ import {
   NativeAssetType,
   NativeMediaView,
 } from "react-native-google-mobile-ads";
+import useNetworkStatus from "../utils/hooks/useNetworkStatus";
 
 export default function NativeAdBlock({ ad, theme }) {
+  const isOnline = useNetworkStatus();
+
+  if (!isOnline) {
+    return (
+      <View style={[styles.container, styles.fallback]}>
+        <Text style={[styles.text, { color: theme?.textMuted || "#999" }]}>
+          No internet connection
+        </Text>
+      </View>
+    );
+  }
+
   if (!ad) {
     return (
       <View style={[styles.container, styles.fallback]}>
@@ -45,6 +58,7 @@ export default function NativeAdBlock({ ad, theme }) {
     </NativeAdView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
