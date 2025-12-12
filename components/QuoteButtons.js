@@ -24,12 +24,7 @@ export default function QuoteButtons({ theme, onNext, onShare, onDownload }) {
       >
         <Ionicons name="share-social-outline" size={24} color="#fff" />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.downloadBtn, { backgroundColor: theme.active }]}
-        onPress={onDownload}
-      >
-        <Ionicons name="download-outline" size={24} color="#fff" />
-      </TouchableOpacity>
+    
     </View>
   );
 }

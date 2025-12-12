@@ -1,48 +1,4 @@
-// // AdManager.js
-// import { InterstitialAd, AdEventType, TestIds } from "react-native-google-mobile-ads";
 
-// const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : "ca-app-pub-xxxx/yyyy";
-
-// // Singleton interstitial instance
-// let interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-//   requestNonPersonalizedAdsOnly: true,
-// });
-
-// let adLoaded = false;
-// let isCooldown = false;
-
-// interstitial.addAdEventListener(AdEventType.LOADED, () => {
-//   adLoaded = true;
-// });
-
-// interstitial.addAdEventListener(AdEventType.CLOSED, () => {
-//   adLoaded = false;
-//   interstitial.load(); // preload for next use
-//   // start 30s cooldown after ad watched
-//   isCooldown = true;
-//   setTimeout(() => {
-//     isCooldown = false;
-//   }, 30000);
-// });
-
-// // load first ad
-// interstitial.load();
-
-// export const showAdIfAvailable = (onFinish) => {
-//   if (isCooldown) {
-//     // 🚫 Ads in cooldown → skip directly
-//     onFinish();
-//     return;
-//   }
-
-//   if (adLoaded) {
-//     interstitial.show();
-//     interstitial.addAdEventListener(AdEventType.CLOSED, onFinish);
-//   } else {
-//     // 🚫 Ad not ready → skip
-//     onFinish();
-//   }
-// };
 // AdManager.js
 import { InterstitialAd, AdEventType, TestIds } from "react-native-google-mobile-ads";
 
@@ -69,7 +25,7 @@ interstitial.addAdEventListener(AdEventType.CLOSED, () => {
   isCooldown = true;
   setTimeout(() => {
     isCooldown = false;
-  }, 20000);
+  }, 30000);
 
   // Call all queued callbacks once safely
   adCallbackQueue.forEach((cb) => cb());
