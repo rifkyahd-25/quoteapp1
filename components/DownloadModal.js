@@ -1,4 +1,4 @@
-// import React from "react";
+// import React, { useEffect } from "react";
 // import {
 //   View,
 //   Text,
@@ -6,12 +6,15 @@
 //   FlatList,
 //   Modal,
 //   ScrollView,
+//   ActivityIndicator,
 // } from "react-native";
 // import Slider from "@react-native-community/slider";
 // import ViewShot from "react-native-view-shot";
 // import { LinearGradient } from "expo-linear-gradient";
 // import { showAdIfAvailable } from "../utils/hooks/AdManager";
-
+// import NetInfo from "@react-native-community/netinfo";
+// import * as MediaLibrary from "expo-media-library";
+// import Toast from 'react-native-toast-message';
 // const FONTS = [
 //   "System",
 //   "serif",
@@ -43,19 +46,53 @@
 //   setAlignment,
 //   previewRef, // ✅ Passed from parent
 // }) {
+//   const [loading, setLoading] = React.useState(false);
+//   const [isConnected, setIsConnected] = React.useState(true);
+
+//   useEffect(() => {
+//     const unsubscribe = NetInfo.addEventListener((state) => {
+//       setIsConnected(state.isConnected);
+//     });
+//     return () => unsubscribe();
+//   }, []);
 
 //   const handleDownload = async () => {
+//     if (!isConnected) return;
 //     try {
+//       setLoading(true);
+
+//       // Check existing permission status
+//       let { status } = await MediaLibrary.getPermissionsAsync();
+//       if (status !== "granted") {
+//         // Ask permission only if not granted
+//         const perm = await MediaLibrary.requestPermissionsAsync();
+//         status = perm.status;
+//       }
+
+//       if (status !== "granted") {
+//         console.warn("Permission denied, cannot save image.");
+//         return;
+//       }
+
 //       await showAdIfAvailable(async () => {
-//         if (previewRef?.current?.capture && onDownload) {
+//         if (previewRef?.current?.capture) {
 //           const uri = await previewRef.current.capture();
-//           onDownload(uri);
+//           await MediaLibrary.saveToLibraryAsync(uri);
+
+//           Toast.show({
+//             type: "success",
+//             text1: "✅ Image saved!",
+//             text2: "Your quote has been saved to the gallery.",
+
+//           });
 //         } else {
 //           console.warn("ViewShot ref not ready");
 //         }
 //       });
 //     } catch (err) {
 //       console.error("Download failed:", err);
+//     } finally {
+//       setLoading(false);
 //     }
 //   };
 
@@ -309,20 +346,53 @@
 //               </View>
 //             </View>
 
+//             {/* ===== DOWNLOAD INFO MESSAGE ===== */}
+//             <Text
+//               style={{
+//                 color: "#fbbf24",
+//                 fontSize: 14,
+//                 textAlign: "center",
+//                 marginBottom: 10,
+//               }}
+//             >
+//               Downloading process contains ads
+//             </Text>
+
 //             {/* Buttons */}
+//             {!isConnected && (
+//               <Text
+//                 style={{
+//                   color: "#f87171",
+//                   textAlign: "center",
+//                   marginBottom: 10,
+//                   fontSize: 14,
+//                 }}
+//               >
+//                 No Internet Connection. Downloads are disabled.
+//               </Text>
+//             )}
+
+//             {/* Download Button */}
 //             <TouchableOpacity
 //               style={{
 //                 marginVertical: 10,
 //                 paddingVertical: 12,
 //                 borderRadius: 30,
 //                 alignItems: "center",
-//                 backgroundColor: theme.primary,
+//                 backgroundColor: isConnected ? theme.primary : "#6b7280", // gray when disabled
+//                 flexDirection: "row",
+//                 justifyContent: "center",
 //               }}
 //               onPress={handleDownload}
+//               disabled={loading || !isConnected}
 //             >
-//               <Text style={{ color: "#fff", fontWeight: "600" }}>
-//                 Download Now
-//               </Text>
+//               {loading ? (
+//                 <ActivityIndicator size="small" color="#fff" />
+//               ) : (
+//                 <Text style={{ color: "#fff", fontWeight: "600" }}>
+//                   {isConnected ? "Download Now" : "Download "}
+//                 </Text>
+//               )}
 //             </TouchableOpacity>
 
 //             <TouchableOpacity
@@ -359,6 +429,8 @@ import ViewShot from "react-native-view-shot";
 import { LinearGradient } from "expo-linear-gradient";
 import { showAdIfAvailable } from "../utils/hooks/AdManager";
 import NetInfo from "@react-native-community/netinfo";
+import * as FileSystem from "expo-file-system/legacy";
+import * as Sharing from "expo-sharing";
 const FONTS = [
   "System",
   "serif",
@@ -392,7 +464,7 @@ export default function DownloadModal({
 }) {
   const [loading, setLoading] = React.useState(false);
   const [isConnected, setIsConnected] = React.useState(true);
-
+  const [downloadSuccess, setDownloadSuccess] = React.useState(false);
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected);
@@ -401,13 +473,32 @@ export default function DownloadModal({
   }, []);
 
   const handleDownload = async () => {
-    if (!isConnected) return; // just in case
+    if (!isConnected) return;
+  
     try {
       setLoading(true);
+  
       await showAdIfAvailable(async () => {
-        if (previewRef?.current?.capture && onDownload) {
+        if (previewRef?.current?.capture) {
+  
+          // Capture the ViewShot
           const uri = await previewRef.current.capture();
-          await onDownload(uri);
+  
+          // Create local file path
+          const fileUri = FileSystem.documentDirectory + "saved_image.jpg";
+  
+          // Download (copy) the file into internal app storage
+          await FileSystem.copyAsync({
+            from: uri,
+            to: fileUri,
+          });
+  
+          // Open share/save dialog (NO PERMISSION NEEDED)
+          await Sharing.shareAsync(fileUri);
+  
+          // Show success animation
+          setDownloadSuccess(true);
+          setTimeout(() => setDownloadSuccess(false), 2500);
         } else {
           console.warn("ViewShot ref not ready");
         }
@@ -625,7 +716,7 @@ export default function DownloadModal({
               />
             </View>
 
-            {/* Font Size */}
+            {/* Font Size
             <View style={{ marginBottom: 15 }}>
               <Text style={{ color: "#fff", marginBottom: 8 }}>
                 Font Size: {fontSize}
@@ -640,7 +731,7 @@ export default function DownloadModal({
                 minimumTrackTintColor={theme.primary}
                 maximumTrackTintColor="#aaa"
               />
-            </View>
+            </View> */}
 
             {/* Alignment */}
             <View style={{ marginBottom: 15 }}>
@@ -702,7 +793,7 @@ export default function DownloadModal({
                 paddingVertical: 12,
                 borderRadius: 30,
                 alignItems: "center",
-                backgroundColor: isConnected ? theme.primary : "#6b7280", // gray when disabled
+                backgroundColor: isConnected ? theme.primary : "#6b7280",
                 flexDirection: "row",
                 justifyContent: "center",
               }}
@@ -713,11 +804,10 @@ export default function DownloadModal({
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
                 <Text style={{ color: "#fff", fontWeight: "600" }}>
-                  {isConnected ? "Download Now" : "Download "}
+                  {downloadSuccess ? "✅ Download Success" : "Download Now"}
                 </Text>
               )}
             </TouchableOpacity>
-
 
             <TouchableOpacity
               style={{

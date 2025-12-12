@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system/legacy";
 import * as Sharing from "expo-sharing";
-import * as MediaLibrary from "expo-media-library";
 import { ThemeContext } from "../context/ThemeContext";
 import QuoteCardView from "../components/QuoteCardView"; // ✅ import the separated component
 import QuoteCardSkeleton from "../components/QuoteCardSkeleton";
@@ -67,34 +67,37 @@ export default function HomeScreen() {
 
   const downloadAsImage = async () => {
     try {
+      // Capture the view as an image
       const uri = await viewShotRef.current.capture({
         width: 1080,
         height: 1080,
       });
-
-      const perm = await MediaLibrary.requestPermissionsAsync();
-      if (perm.status === "granted") {
-        await MediaLibrary.saveToLibraryAsync(uri);
-
-        Toast.show({
-          type: "success",
-          text1: "✅ Quote saved!",
-          text2: "Your quote has been saved to the gallery.",
-        });
-      } else {
-        Toast.show({
-          type: "error",
-          text1: "Permission denied",
-          text2: "Please allow gallery access to save quotes.",
-        });
-      }
+  
+      // Create a file path inside your app's storage
+      const fileUri = FileSystem.documentDirectory + "quote.jpg";
+  
+      // Copy the temporary capture to your app storage
+      await FileSystem.copyAsync({
+        from: uri,
+        to: fileUri,
+      });
+  
+      // Open system save/share dialog (does NOT require permissions)
+      await Sharing.shareAsync(fileUri);
+  
+      Toast.show({
+        type: "success",
+        text1: "✅ Quote ready!",
+        text2: "Use the dialog to save it to your gallery.",
+      });
+  
     } catch (error) {
       console.log("Error capturing quote:", error);
-
+  
       Toast.show({
         type: "error",
-        text1: "Permission denied",
-        text2: "Please allow gallery access to save quotes.",
+        text1: "Something went wrong",
+        text2: "Unable to save the image.",
       });
     }
   };

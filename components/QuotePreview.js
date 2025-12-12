@@ -192,12 +192,12 @@ export default function QuotePreview({
         /> */}
 
         {/* Share */}
-        <ActionButton
+        {/* <ActionButton
           label="Share"
           icon="share-social-outline"
           theme={theme}
           onPress={handleShare}
-        />
+        /> */}
       </View>
     </LinearGradient>
   );

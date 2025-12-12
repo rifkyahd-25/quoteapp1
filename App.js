@@ -105,8 +105,8 @@ export default function App() {
       <SafeAreaProvider>
         <NavigationContainer>
           <AppNavigator />
-          <Toast />
         </NavigationContainer>
+          <Toast />
       </SafeAreaProvider>
     </ThemeProvider>
   );

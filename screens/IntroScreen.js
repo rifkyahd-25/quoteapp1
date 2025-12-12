@@ -49,39 +49,6 @@ const screens = [
   },
 ];
 
-// const screens = [
-//   {
-//     key: "welcome",
-//     title: "Welcome to QuoteApp ✨",
-//     subtitle: "Daily inspiration and motivation in one place.",
-//      image: require("../assets/image/ChatGPT Image Sep 23, 2025, 12_19_12 PM.png"),
-//   },
-//   {
-//     key: "curated",
-//     title: "Curated Quotes 📖",
-//     subtitle: "Discover handpicked quotes across life, success, and love.",
-//     image: require("../assets/image/ChatGPT Image Sep 23, 2025, 12_19_21 PM.png"),
-// },
-//   {
-//     key: "favorites",
-//     title: "Save Your Favorites ❤️",
-//     subtitle: "Build your own personal collection of uplifting words.",
-//     // image: require("../assets/quote-favorites.png"),
-//   },
-//   {
-//     key: "daily",
-//     title: "Daily Reminders ⏰",
-//     subtitle: "Stay inspired with gentle notifications every day.",
-//     image: require("../assets/image/ChatGPT Image Sep 23, 2025, 12_27_05 PM.png"),
-//   },
-//   {
-//     key: "getstarted",
-//     title: "Let’s Begin 🌟",
-//     subtitle: "Start your journey towards positivity and growth.",
-//     image: require("../assets/image/ChatGPT Image Sep 23, 2025, 12_27_10 PM.png"),
-
-//   },
-// ];
 
 export default function IntroScreen() {
   const navigation = useNavigation();
